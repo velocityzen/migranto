@@ -1,5 +1,5 @@
 # Migranto
-Simple SQL migration tool
+Simple SQL migration tool for SQLite and PostgreSQL
 
 ## Migrations
 
