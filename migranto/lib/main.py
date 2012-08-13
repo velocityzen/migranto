@@ -1,9 +1,8 @@
 import os
 import re
-from lib.db import Db
-from lib.error import APIError
-from lib.utils import getFileListByMask
-from lib import sql as SQL
+from migranto.lib.db import Db
+from migranto.lib.error import APIError
+from migranto.lib.utils import getFileListByMask
 
 class Migranto:
 

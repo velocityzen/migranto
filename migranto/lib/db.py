@@ -1,5 +1,5 @@
 import urlparse
-from lib.error import APIError
+from migranto.lib.error import APIError
 
 class Db:
 
