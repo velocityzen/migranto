@@ -1,6 +1,10 @@
 # Migranto
 Simple SQL migration tool for SQLite and PostgreSQL
 
+## Instalation
+
+    pip install migranto
+
 ## Migrations
 
 All migrations exist in one directory with names like:
