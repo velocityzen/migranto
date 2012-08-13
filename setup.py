@@ -1,10 +1,9 @@
-import codecs
-from distutils.core import setup
 import os
-from setuptools import find_packages
+from setuptools import setup, find_packages
 
 def read(fname):
-    return codecs.open(os.path.join(os.path.dirname(__file__), fname)).read()
+    with open(os.path.join(os.path.dirname(__file__), fname)) as f:
+        return f.read()
 
 setup(
     name='migranto',
@@ -13,7 +12,7 @@ setup(
     author_email='velocityzen@gmail.com',
     packages=find_packages(),
     url='https://github.com/velocityzen/migranto',
-    license='BSD licence, see LICENCE.txt',
+    license='BSD',
     description='Simple SQL migration tool for SQLite and PostgreSQL',
     long_description = read('README.md'),
     zip_safe=False,
