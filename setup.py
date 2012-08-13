@@ -7,10 +7,11 @@ def read(fname):
 
 setup(
     name='migranto',
-    version='0.1.0',
+    version='0.1.4',
     author='Alexey Novikov',
     author_email='velocityzen@gmail.com',
     packages=find_packages(),
+    install_requires = ["psycopg2"],
     url='https://github.com/velocityzen/migranto',
     license='BSD',
     description='Simple SQL migration tool for SQLite and PostgreSQL',

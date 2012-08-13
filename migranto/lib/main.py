@@ -3,6 +3,7 @@ import re
 from migranto.lib.db import Db
 from migranto.lib.error import APIError
 from migranto.lib.utils import getFileListByMask
+from migranto.lib import sql as SQL
 
 class Migranto:
 
