@@ -44,16 +44,23 @@ class Db:
             self.c.execute(sql, data)
         except Exception:
             return None
-        return self.c.fetchone()[0]
+
+        r = self.c.fetchone()
+
+        if r:
+            return r[0]
+        else:
+            return None
 
     def executeFile(self, filename):
         sql = open(filename, 'r').read()
 
-        if self.scheme == 'sqlite':
-            self.c.executescript(sql)
+        if sql.strip():
+            if self.scheme == 'sqlite':
+                self.c.executescript(sql)
 
-        elif self.scheme == 'pgsql':
-            self.c.execute(sql)
+            elif self.scheme == 'pgsql':
+                self.c.execute(sql)
 
 
     def execute(self, sql, data = None):

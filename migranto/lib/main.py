@@ -17,6 +17,7 @@ class Migranto:
         self.verbose = options.verbose
         self.migrations = {}
         self.storage = options.storage
+        self.fake = options.fake
         self.home_path = os.path.join(os.path.realpath(os.path.dirname(__file__)), '..')
 
     def dbConnect(self):
@@ -111,7 +112,8 @@ class Migranto:
 
         try:
             self.db.begin()
-            self.db.executeFile(migration[flow])
+            if not self.fake:
+                self.db.executeFile(migration[flow])
             self.db.execute(self.SQL['updateMigration'].format(tablename = self.storage), ( number - 1 if flow == 'down' else number, self.name))
             self.db.commit()
 
@@ -124,6 +126,8 @@ class Migranto:
 
     def run(self):
         if self.verbose:
+            if self.fake:
+                print "FAKE MIGRATION!"
             print "Opening database connection"
         self.dbConnect()
 

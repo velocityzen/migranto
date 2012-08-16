@@ -25,6 +25,9 @@ def main():
     parser.add_argument('--storage', '-s', dest='storage', metavar='NAME', default='migranto',
                         help='migranto table name for data (default is migranto)')
 
+    parser.add_argument('--fake', '-f', dest='fake', action='count', default=False,
+                        help='fake migration (no sql applied to database, except migration number)')
+
     migranto = Migranto(parser.parse_args())
 
     try:

@@ -28,3 +28,4 @@ That's it. Simple enough.
 *	__--migration N, -m N__ — migration step (last migration if omitted, 0 - before first migration)
 *	__--storage NAME, -s NAME__ — migranto table name for data (default is migranto)
 *	__--verbose, -v__ — verbose mode
+*	__--fake, -f__ — fake migration (no sql applied to database, except migration number)
