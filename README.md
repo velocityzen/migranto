@@ -19,7 +19,7 @@ That's it. Simple enough.
 
 ## Usage:
 
-`./migranto [-h] --database URL --name NAME --path PATH [--migration N] [--storage NAME] [--verbose]`
+`./migranto [-h] --database URL --name NAME --path PATH [--migration N] [--storage NAME] [--verbose] [--fake] `
 
 *	__--help, -h__ — show this help message and exit
 *	__--database URL, -d URL__ — database url (pgsql://user:password@host:port/dbname or sqlite://path/to/data.base)
