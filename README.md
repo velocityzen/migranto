@@ -19,7 +19,7 @@ That's it. Simple enough.
 
 ## Usage:
 
-`./migranto [-h] --database URL [--storage NAME] `
+`./migranto [-h] --database URL [--name NAME] `
 
 shows migrations status
 
