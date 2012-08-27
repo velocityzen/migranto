@@ -1,5 +1,6 @@
 import urlparse
 from migranto.lib.error import APIError
+from migranto.lib.printer import Printer
 
 class Db:
 
@@ -38,6 +39,13 @@ class Db:
             return r
         else:
             raise APIError('Provide a correct database connection string')
+
+    def printData(self, out):
+        printer = Printer(out, [20, 10, 20])
+        printer.printRow(('Name', 'Migration', 'Date'))
+
+        for row in self.c:
+            printer.printRow(row)
 
     def fetchOneResult(self, sql, data):
         try:

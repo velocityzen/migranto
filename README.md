@@ -19,6 +19,10 @@ That's it. Simple enough.
 
 ## Usage:
 
+`./migranto [-h] --database URL [--storage NAME] `
+
+shows migrations status
+
 `./migranto [-h] --database URL --name NAME --path PATH [--migration N] [--storage NAME] [--verbose] [--fake] `
 
 *	__--help, -h__ — show this help message and exit

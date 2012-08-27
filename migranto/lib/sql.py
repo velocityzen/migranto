@@ -8,8 +8,10 @@ sqlite = {
             );
         """,
     'insertMigration': "INSERT INTO {tablename} (name, migration, timestamp) VALUES (?, 0, time('now') );",
-    'updateMigration': "UPDATE {tablename} SET migration = ? WHERE name='?';",
+    'updateMigration': "UPDATE {tablename} SET migration = ? WHERE name=?;",
     'selectLatestMigration': "SELECT migration FROM {tablename} WHERE name=?;",
+    'selectAllMigrationStatus': "SELECT * FROM {tablename};",
+    'selectOneMigrationStatus': "SELECT * FROM {tablename} WHERE name=?;",
 }
 
 pgsql = {
@@ -24,4 +26,6 @@ pgsql = {
     'insertMigration': "INSERT INTO {tablename} (name, migration, timestamp) VALUES (%s, 0, NOW() );",
     'updateMigration': "UPDATE {tablename} SET migration=%s WHERE name=%s;",
     'selectLatestMigration': "SELECT migration FROM {tablename} WHERE name=%s;",
+    'selectAllMigrationStatus': "SELECT * FROM {tablename};",
+    'selectOneMigrationStatus': "SELECT * FROM {tablename} WHERE name=%s;",
 }

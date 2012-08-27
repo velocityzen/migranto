@@ -4,6 +4,7 @@ from migranto.lib.db import Db
 from migranto.lib.error import APIError
 from migranto.lib.utils import getFileListByMask
 from migranto.lib import sql as SQL
+import sys
 
 class Migranto:
 
@@ -14,6 +15,7 @@ class Migranto:
         self.toStep = options.migration if options.migration is not None else 'max'
         self.nowStep = None
         self.topStep = 0
+        self.wasStep = None
         self.verbose = options.verbose
         self.migrations = {}
         self.storage = options.storage
@@ -124,30 +126,51 @@ class Migranto:
                 raise APIError('Error: ' + str(exc) + 'Rollback error: ' + str(rollback_exc))
             raise APIError('Error: ' + str(exc))
 
+    def printMigrationStatus(self):
+        try:
+            if not self.name:
+                self.db.execute(self.SQL['selectAllMigrationStatus'].format(tablename = self.storage))
+            else:
+                self.db.execute(self.SQL['selectOneMigrationStatus'].format(tablename = self.storage), (self.name,))
+        except Exception, exc:
+            raise APIError(str(exc))
+
+        print('Migranto status')
+        self.db.printData(sys.stdout)
+
     def run(self):
+
         if self.verbose:
             if self.fake:
                 print "FAKE MIGRATION!"
-            print "Opening database connection"
+            print "\nOpening database connection...\n"
         self.dbConnect()
 
+        if self.path and self.name:
+
+
+            if self.verbose:
+                print "Database: " + self.db.dbname
+
+            self.loadMigrations()
+
+            if self.getLastMigration() is None:
+                self.createNewMigration(self.name)
+                self.nowStep = 0
+
+            if self.verbose:
+                print "Migration for %s. Now %d / To %d / Max %d" % (self.name, self.nowStep, self.toStep, self.topStep)
+
+            self.wasStep = self.nowStep
+            self.nowStep = self.applyMigrations()
+
+            print "%s successfully migrated from %d to %d" % (self.name, self.wasStep, self.nowStep)
+
+        else:
+            self.printMigrationStatus()
+
         if self.verbose:
-            print "Database: " + self.db.dbname
-
-        self.loadMigrations()
-
-        if self.getLastMigration() is None:
-            self.createNewMigration(self.name)
-            self.nowStep = 0
-
-        if self.verbose:
-            print "Migration for %s. Now %d / To %d / Max %d" % (self.name, self.nowStep, self.toStep, self.topStep)
-
-        self.nowStep = self.applyMigrations()
-
-        if self.verbose:
-            print "Migration for %s complete with migration %d" % (self.name, self.nowStep)
-
-        if self.verbose:
-            print "Closing database connection"
+            print "\nClosing database connection"
         self.dbClose()
+
+        print "\n"

@@ -10,10 +10,10 @@ def main():
     parser.add_argument('--database', '-d', dest='database', metavar='URL', required=True,
                         help='database url (pgsql://user:password@host:port/dbname or sqlite://path/to/data.base)')
 
-    parser.add_argument('--name', '-n', dest='name', required=True,
+    parser.add_argument('--name', '-n', dest='name',
                         help='migration set name')
 
-    parser.add_argument('--path', '-p', dest='path', required=True,
+    parser.add_argument('--path', '-p', dest='path',
                         help='path to migrations dir')
 
     parser.add_argument('--migration', '-m', dest='migration', type=int, metavar = 'N',
