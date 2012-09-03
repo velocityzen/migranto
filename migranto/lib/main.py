@@ -31,6 +31,7 @@ class Migranto:
 
     def getLastMigration(self):
         self.nowStep = self.db.fetchOneResult(self.SQL['selectLatestMigration'].format(tablename = self.storage) , (self.name,))
+
         return self.nowStep
 
     def createNewMigration(self, name):
@@ -97,20 +98,23 @@ class Migranto:
                 self.applyMigration(self.migrations[i], 'down', i)
 
             return  self.toStep
+
         # up
         elif self.toStep > self.nowStep:
             # no migrations applied yet
             if not self.nowStep:
-                self.nowStep = 1
+                self.nowStep = 0
 
-            for i in range(self.nowStep, self.toStep + 1):
+            for i in range(self.nowStep + 1, self.toStep + 1):
                 self.applyMigration(self.migrations[i], 'up', i)
 
             return  self.toStep
 
     def applyMigration(self, migration, flow, number):
-        if self.verbose:
-            print "%s %d: %s" % (self.name, number, migration[flow])
+        if flow not in migration:
+            migration[flow] = None
+
+        print "%s %d: %s" % (self.name, number, migration[flow] if migration[flow] else "Empty %s migration" % flow),
 
         try:
             self.db.begin()
@@ -118,6 +122,7 @@ class Migranto:
                 self.db.executeFile(migration[flow])
             self.db.execute(self.SQL['updateMigration'].format(tablename = self.storage), ( number - 1 if flow == 'down' else number, self.name))
             self.db.commit()
+            print " Done!"
 
         except Exception, exc:
             try:
@@ -148,11 +153,13 @@ class Migranto:
 
         if self.path and self.name:
 
-
             if self.verbose:
                 print "Database: " + self.db.dbname
 
             self.loadMigrations()
+
+            if self.verbose >= 2:
+                print self.migrations, "\n"
 
             if self.getLastMigration() is None:
                 self.createNewMigration(self.name)
@@ -171,6 +178,5 @@ class Migranto:
 
         if self.verbose:
             print "\nClosing database connection"
+            print "\n"
         self.dbClose()
-
-        print "\n"

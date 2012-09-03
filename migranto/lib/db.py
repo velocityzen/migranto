@@ -61,14 +61,15 @@ class Db:
             return None
 
     def executeFile(self, filename):
-        sql = open(filename, 'r').read()
+        if filename:
+            sql = open(filename, 'r').read()
 
-        if sql.strip():
-            if self.scheme == 'sqlite':
-                self.c.executescript(sql)
+            if sql.strip():
+                if self.scheme == 'sqlite':
+                    self.c.executescript(sql)
 
-            elif self.scheme == 'pgsql':
-                self.c.execute(sql)
+                elif self.scheme == 'pgsql':
+                    self.c.execute(sql)
 
 
     def execute(self, sql, data = None):
