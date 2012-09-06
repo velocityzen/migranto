@@ -6,8 +6,9 @@ class Db:
 
     schemes = ('pgsql', 'sqlite')
 
-    def __init__(self, db_url):
+    def __init__(self, db_url, out = False):
         self.options = self.parseDBString(db_url)
+        self.out = out
 
         try:
             if self.options.scheme == 'pgsql':
@@ -65,24 +66,37 @@ class Db:
             sql = open(filename, 'r').read()
 
             if sql.strip():
-                if self.scheme == 'sqlite':
-                    self.c.executescript(sql)
+                if self.out:
+                    print >> self.out, sql
+                else:
+                    if self.scheme == 'sqlite':
+                        self.c.executescript(sql)
 
-                elif self.scheme == 'pgsql':
-                    self.c.execute(sql)
+                    elif self.scheme == 'pgsql':
+                        self.c.execute(sql)
 
 
     def execute(self, sql, data = None):
-        if data:
-            self.c.execute(sql, data)
+
+        if self.out:
+            print >> self.out, sql % data
         else:
-            self.c.execute(sql)
+            if data:
+                self.c.execute(sql, data)
+            else:
+                self.c.execute(sql)
 
     def begin(self):
-        self.c.execute('BEGIN')
+        if self.out:
+            print >> self.out, 'BEGIN;'
+        else:
+            self.c.execute('BEGIN')
 
     def commit(self):
-        self.conn.commit()
+        if self.out:
+            print >> self.out, 'COMMIT;'
+        else:
+            self.conn.commit()
 
     def rollback(self):
         self.conn.rollback()

@@ -22,8 +22,13 @@ class Migranto:
         self.fake = options.fake
         self.home_path = os.path.join(os.path.realpath(os.path.dirname(__file__)), '..')
 
+        if options.out:
+            self.out = sys.stdout
+        else:
+            self.out = False
+
     def dbConnect(self):
-        self.db = Db(self.dbstring)
+        self.db = Db(self.dbstring, self.out)
         self.SQL = getattr(SQL, self.db.scheme)
 
     def dbClose(self):
@@ -114,7 +119,10 @@ class Migranto:
         if flow not in migration:
             migration[flow] = None
 
-        print "%s %d: %s" % (self.name, number, migration[flow] if migration[flow] else "Empty %s migration" % flow),
+        if self.out:
+            print "--", migration[flow] if migration[flow] else "Empty %s migration" % flow
+        else:
+            print "%s %d: %s" % (self.name, number, migration[flow] if migration[flow] else "Empty %s migration" % flow),
 
         try:
             self.db.begin()
@@ -122,7 +130,8 @@ class Migranto:
                 self.db.executeFile(migration[flow])
             self.db.execute(self.SQL['updateMigration'].format(tablename = self.storage), ( number - 1 if flow == 'down' else number, self.name))
             self.db.commit()
-            print " Done!"
+            if not self.out:
+                print " Done!"
 
         except Exception, exc:
             try:
@@ -143,40 +152,47 @@ class Migranto:
         print('Migranto status')
         self.db.printData(sys.stdout)
 
+    def printVerbose(self, message, v = 1):
+        if self.verbose >= v:
+            if self.out:
+                print "--", message
+            else:
+                print message
+
     def run(self):
 
-        if self.verbose:
-            if self.fake:
-                print "FAKE MIGRATION!"
-            print "\nOpening database connection...\n"
+        if self.fake and not self.out:
+            print "FAKE MIGRATION!"
+
+        if not self.out:
+            self.printVerbose("Opening database connection...")
+
         self.dbConnect()
 
         if self.path and self.name:
 
-            if self.verbose:
-                print "Database: " + self.db.dbname
+            self.printVerbose("Database: %s" % self.db.dbname)
 
             self.loadMigrations()
 
-            if self.verbose >= 2:
-                print self.migrations, "\n"
+            self.printVerbose('%s\n' % str(self.migrations), 2)
 
             if self.getLastMigration() is None:
                 self.createNewMigration(self.name)
                 self.nowStep = 0
 
-            if self.verbose:
-                print "Migration for %s. Now %d / To %d / Max %d" % (self.name, self.nowStep, self.toStep, self.topStep)
+            self.printVerbose("Migration for %s. Now %d / To %d / Max %d" % (self.name, self.nowStep, self.toStep, self.topStep))
 
             self.wasStep = self.nowStep
             self.nowStep = self.applyMigrations()
 
-            print "%s successfully migrated from %d to %d" % (self.name, self.wasStep, self.nowStep)
+            if not self.out:
+                print "%s successfully migrated from %d to %d" % (self.name, self.wasStep, self.nowStep)
 
         else:
             self.printMigrationStatus()
 
-        if self.verbose:
-            print "\nClosing database connection"
-            print "\n"
+        if not self.out:
+            self.printVerbose("Closing database connection")
+
         self.dbClose()

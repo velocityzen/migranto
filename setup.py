@@ -7,7 +7,7 @@ def read(fname):
 
 setup(
     name='migranto',
-    version='0.1.8',
+    version='0.1.9',
     author='Alexey Novikov',
     author_email='velocityzen@gmail.com',
     packages=find_packages(),

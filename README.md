@@ -23,7 +23,7 @@ That's it. Simple enough.
 
 shows migrations status
 
-`./migranto [-h] --database URL --name NAME --path PATH [--migration N] [--storage NAME] [--verbose] [--fake] `
+`./migranto [-h] --database URL --name NAME --path PATH [--migration N] [--storage NAME] [--verbose] [--fake] [--out] `
 
 *	__--help, -h__ — show this help message and exit
 *	__--database URL, -d URL__ — database url (pgsql://user:password@host:port/dbname or sqlite://path/to/data.base)
@@ -32,4 +32,5 @@ shows migrations status
 *	__--migration N, -m N__ — migration step (last migration if omitted, 0 - before first migration)
 *	__--storage NAME, -s NAME__ — migranto table name for data (default is migranto)
 *	__--verbose, -v__ — verbose mode
+*	__--out, -o__ — output sql to standard output. nothing applied to database.
 *	__--fake, -f__ — fake migration (no sql applied to database, except migration number)
