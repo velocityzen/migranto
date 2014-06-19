@@ -8,3 +8,11 @@ node_modules
 docs/_build
 .monitor
 npm-debug.log
+
+# virtualenv:
+Include
+Lib
+Scripts
+
+# Editor artifacts, backups:
+*~
