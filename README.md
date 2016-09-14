@@ -1,9 +1,13 @@
 # Migranto
 Simple SQL migration tool for SQLite and PostgreSQL
 
-## Instalation
+## Installation
 
     pip install migranto
+    
+or, if you intend to patch PostgreSQL databases:
+
+    pip install migranto[PostgreSQL]
 
 ## Migrations
 
@@ -14,7 +18,7 @@ All migrations exist in one directory with names like:
 	0002_some_other_useful_name.sql
 	0002_some_other_useful_name_rollback.sql
 
-Migranto checks migrations directory and apply sql files to database.
+Migranto checks the migrations directory and applies sql files to a database.
 That's it. Simple enough.
 
 ## Usage:
